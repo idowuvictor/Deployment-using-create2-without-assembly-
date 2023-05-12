@@ -9,7 +9,7 @@ async function main() {
 
   //------------------Variable--------------//
   const salt = 1;
-  const owner = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4";
+  const owner = "0x457160c55D80831cD903523f81114AE741710417";
   const walletname = "Simple Wallet2";
   
     //--------------Get bytecode-------------------
