@@ -1,5 +1,25 @@
 ## # Deploying Contract With CREATE2 on Celo without inline Assembly
 
+## Table of Contents
+- [Deploying Contract With CREATE2 on Celo without inline Assembly](#deploying-contract-with-create2-on-celo-without-inline-Assembly)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Objective](#objective)
+  - [Prerequisites](#prerequisites)
+    - [How to use new create2 opcode](#How-to-use-new-create2-opcode)
+  - [Tutorial](#tutorial)
+    - [Factory Contract Explained](#Factory-Contract-Explained)
+    - [TestContract Explained](#Testcontract-Explained)
+    - [Deploying Your Contracts](#Deploying-your-contracts)
+        - [Hardhat Config Update](#hardhat-config-update)
+        - [Deploy script](#Deploy-script)
+        - [Breakdown of Deployed Script](#Breakdown-of-Deployed-Script)
+    - [Test File](#Test-File)
+        - [Factory.ts](#Factory.ts)
+        - [Factory.ts Explained](#Factory.ts-Explained)
+    - [Conclusion](#conclusion)
+  - [External Link](#External-Link)
+
 
 ## Introduction
 
