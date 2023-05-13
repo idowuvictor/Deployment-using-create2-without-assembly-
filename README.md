@@ -215,7 +215,7 @@ Then, let’s deploy our contract using this command line in our VSCode terminal
 ```bash
 npx hardhat run scripts/deploy.ts --network alfajores
 ```
-![Deployment Output](Images/deployed.png)
+![Deployment Output](Images/deploy-result.png)
 
 You will discover that the deployed address and the precomputed address are the same thing.
 So, before deployement, we can always check for the contract address that will be generated when a contract is deployed with create2.
@@ -339,7 +339,7 @@ e.g. I verify if the TestContractAddress(which is the deployed address) is the s
 Before each test case, the beforeEach hook is used to deploy the contract, ensuring a fresh instance is available for each test case.
 
 
-![Test Output](Images/testOutput.png)
+![Test Output](Images/Test-result.png)
 
 Here, we can see that the test passed succesfully.
 
