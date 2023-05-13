@@ -193,3 +193,31 @@ main().catch((error) => {
 });
 
 ```
+
+### Breakdown of Deployed Script:
+- Deployed the Factory contract and log the factory `contract address`
+- Declared the necessary parameter requirement
+
+- Get the `bytecode` (when a contract is compiled an artifact is provided whuch comprises of the contract abi, contract bytecode and other things)
+The bytecode provided by the compilation of the contract doesn't contain the constructor argument. so `ethers` built in function `AbiCoder` was used to encode the constructor parameter. 
+The encoded form of the parameters is in hexadecimal. so the `0x` in front of the encoded parameter is removed and the result is added to the `TestContract` bytecode 
+so we have the `TestContract` bytecode  + The encoded parmeter without the `0x`.
+
+>**_Note_**: In the prerequisite article, The bytecode of the Testcontract was gotten using the `getContractBytecode()` function in the `FactoryContract`. With this script written we've been able to reduce the contract size and also avoid spending gas to get the bytecode.
+
+- Get precomputed address by passing salt and bytecode to it.
+- Called the `createContract` function passing in the TestContract constructor parameter(owner and walletname) and salt.
+- Interacted with the `TestContract` contract passing in the deployed TestContract Address.
+
+
+Then, let’s deploy our contract using this command line in our VSCode terminal:
+
+```bash
+npx hardhat run scripts/deploy.ts --network alfajores
+```
+![Deployment Output](Images/deployed.png)
+
+You will discover that the deployed address and the precomputed address are the same thing.
+So, before deployement, we can always check for the contract address that will be generated when a contract is deployed with create2.
+
+>**_Note_**: In the prerequisite [Article](https://github.com/Ultra-Tech-code/Deploying-contract-with-create2-on-celo/blob/main/Images/deployed.png), The address gotten in the image provided there is different from what we have here because the contract bytecode is different due to changes/contribution proposed by the article evaluator on Dacade and also the parameter passed into the `TestContract` are different.
