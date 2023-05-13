@@ -352,4 +352,4 @@ The link to my project repository can be found [here](https://github.com/Ultra-T
 
 
 ### External Link
-For deeper and dangerous use case of create2 check out this repo https://github.com/0age/metamorphic
+For deeper and dangerous use case of create2 check out this [repo](https://github.com/0age/metamorphic)
