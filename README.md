@@ -81,3 +81,24 @@ contract Factory {
 
 
 ```
+
+The Breakdown of the contract:
+
+- The License identifier was declared
+- The Solidity version was declared also
+- The contract that we are deploying (Testcontract) is imported.
+
+- `createContract()` Function deploys the contract and returns the address of the deployed contract. it takes in the prameter required by the Testcontract. and a _salt value.
+Here, the `new` opcode is used to deploy the contract instead of the inline assembly code used in the old create2. check [this](https://github.com/Ultra-Tech-code/Deploying-contract-with-create2-on-celo/#factory-contract-explained) to understand better.
+
+>**_Note_**: The salt value is a uint256 value. which is converted to bytes32 inside the `createContract` function.
+
+- `getAddress()` Function has been explained by the article recommended. 
+>**_Note_**: The salt value passed in here is a uint256 value. which is converted to bytes32 inside the function.
+
+All explanation about the `getContractBytecode()` and `getAddress()` function has been talked about extensively in the prerequisite article. kindly check it out again.
+
+
+#### TestContract Explained
+revert to the prequisite article. [here](https://github.com/Ultra-Tech-code/Deploying-contract-with-create2-on-celo/#testcontract-explained)
+
