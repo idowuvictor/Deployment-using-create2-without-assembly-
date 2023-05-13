@@ -323,3 +323,33 @@ describe("Factory Contract", function () {
 });
 
 ```
+
+To run the test using the command line in our VSCode terminal:
+
+```bash
+npx hardhat test
+```
+
+### Factory.ts Explained
+Factory.ts is a test file that contains test cases for the factory contract. The test file starts with importing the necessary testing frameworks like chai and sets up a test suite using describe.
+
+Each individual test case is defined using the it function. Inside each test case, an assertions is written using the expect function provided by the testing framework to validate the expected behavior of the code being tested.
+e.g. I verify if the TestContractAddress(which is the deployed address) is the same as the precomputed Address. `expect(await TestContractAddress).to.equal(precomputedAddress);`
+
+Before each test case, the beforeEach hook is used to deploy the contract, ensuring a fresh instance is available for each test case.
+
+
+![Test Output](Images/testOutput.png)
+
+Here, we can see that the test passed succesfully.
+
+### Conclusion
+
+In addition to what we have in the prerequisite article, the new create2 method is a shorter and efficient method to using create 2 to deployed a contract.
+
+
+The link to my project repository can be found [here](https://github.com/Ultra-Tech-code/Deployment-with-create2).
+
+
+### External Link
+For deeper and dangerous use case of create2 check out this repo https://github.com/0age/metamorphic
