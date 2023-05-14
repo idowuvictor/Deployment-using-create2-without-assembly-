@@ -7,7 +7,6 @@ contract TestContract {
     string public walletName;
     address public admin;
 
-
     // Modifier to check for caller of a function. It restrict Access to owner/admin
     modifier onlyAdmin() {
         require(admin == msg.sender, "Caller is not the owner");
@@ -20,6 +19,8 @@ contract TestContract {
     * @param   _walletname  . The wallet name 
     **/
     constructor(address _owner, string memory _walletname) payable {
+        require(_owner != address(0), "Invalid address");
+        require(bytes(_walletname).length > 0, "Invalid wallet name");
         admin = _owner;
         walletName = _walletname;
     }
@@ -30,6 +31,7 @@ contract TestContract {
      * @param   _newAdmin  . The Address of the new admin/owner
      */
     function transferOwnership(address _newAdmin) external onlyAdmin {
+        require(_newAdmin != address(0), "Invalid address");
         admin = _newAdmin;
     }
 
@@ -46,12 +48,16 @@ contract TestContract {
      * @dev     . Only admin/owner can call the function
      */
     function withdraw() external onlyAdmin {
-        payable(msg.sender).transfer(address(this).balance);
+        require(address(this).balance > 0, "Insufficient balance");
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Transfer failed");
     }
 
     /**
      * @notice  . A Function to receive celo Token sent directly to this contract without a function call.
      * @dev     . similar to a fallback function.
      */
-    receive() external payable{}
+    receive() external payable{
+        // do nothing
+    }
 }
