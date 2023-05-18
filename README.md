@@ -73,9 +73,15 @@ import "./TestContract.sol";
 
 contract Factory {
 
+    // A mapping to keep track of used salts to prevent reusing them
+    mapping(bytes32 => bool) usedSalts;
+
+    event DeployedSuccessfully(address deployedAddress);
+
     /**
-     * @notice  . A function to Get the address of a contract
-     * @dev     . returns an address
+     * @notice  . A function to deploy a contract and return its address
+     * @dev     . The function deploys a new contract with the given constructor arguments and a precomputed salt value
+     *          The function emits the address of the newly deployed contract upon successful deployment
      * @param   _owner  . An address[TestContract constructor arguments]
      * @param   _walletname  . A string[TestContract constructor arguments]
      * @param   _salt. A unique uint256 used to precompute an address
@@ -84,19 +90,25 @@ contract Factory {
         address _owner,
         string memory _walletname,
         uint _salt
-    ) public payable returns (address deployedContract) {
+    ) public payable {
         bytes32 salted = bytes32(_salt);
 
-        deployedContract = address(new TestContract{salt: salted}(_owner, _walletname));
+        require(!usedSalts[salted], "Salt already used.");
+        usedSalts[salted] = true;
+
+        address deployedAddress =  address(new TestContract{salt: salted}(_owner, _walletname));
+
+        emit DeployedSuccessfully(deployedAddress);
     }
 
 
     /**
-     * @notice  . A function to Compute address of the contract to be deployed
-     * @dev     . returns address where the contract will deployed to if deployed with create2 new opcode
-     * @param   _salt: unique uin256 used to precompute an address
-    */
-    function getAddress(uint _salt, bytes memory bytecode) public view returns (address) {
+     * @notice  A function to compute the address of a contract to be deployed
+     * @dev The function returns the address where a contract will be deployed if deployed with the create2 opcode
+     * @param _salt A unique uint256 used to precompute an address.
+     * @param _bytecode The bytecode of the contract to be deployed encoded with the parameters.
+     */
+    function preComputeAddress(uint _salt, bytes memory _bytecode) public view returns (address) {
          bytes32 salt = bytes32(_salt);
 
         address predictedAddress = address(uint160(uint(keccak256(
@@ -104,13 +116,14 @@ contract Factory {
                 bytes1(0xff),
                 address(this), 
                 salt, 
-                keccak256(bytecode) 
+                keccak256(_bytecode) 
             )
         ))));
       
         return predictedAddress;
     }
 }
+
 ```
 
 The Breakdown of the contract:
@@ -124,7 +137,7 @@ Here, the `new` opcode is used to deploy the contract instead of the inline asse
 
 >**_Note_**: The salt value is a uint256 value. which is converted to bytes32 inside the `createContract` function.
 
-- `getAddress()` Function has been explained by the article recommended. 
+- `preComputeAddress()` It's the same as the `getAddress` Function in the article recommended. Kindly go through the article.
 >**_Note_**: The salt value passed in here is a uint256 value. which is converted to bytes32 inside the function.
 
 All explanation about the `getContractBytecode()` and `getAddress()` function has been talked about extensively in the prerequisite article. kindly check it out again.
@@ -155,13 +168,13 @@ async function main() {
 
   //------------------Variable--------------//
   const salt = 1;
-  const owner = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4";
+  const owner = "0x457160c55D80831cD903523f81114AE741710417";
   const walletname = "Simple Wallet2";
   
     //--------------Get bytecode-------------------
     const artifact = await artifacts.readArtifact("TestContract");
     const TestContractBytecode = artifact.bytecode;
-    console.log("TestContract bytecode", TestContractBytecode )
+   // console.log("TestContract bytecode", TestContractBytecode )
 
     // Create an instance of ethers.utils.AbiCoder
     const abiCoder = new ethers.utils.AbiCoder();
@@ -185,8 +198,8 @@ async function main() {
   const factoryContract = await ethers.getContractAt("Factory", factory.address);
 
   //get pre computed address of a contract
-  const getAddress = await factoryContract.getAddress(salt, bytecode);
-  console.log("Pre Computed address", getAddress);
+  const preComputeAddress = await factoryContract.preComputeAddress(salt, bytecode);
+  console.log("Pre Computed address", preComputeAddress);
 
   //-------------------------------------------------------//
 
@@ -196,7 +209,7 @@ async function main() {
   //@ts-ignore
   const txargs = txreceipt.events[0].args;
   //@ts-ignore
-  const TestContractAddress = await txargs.deployedContract
+  const TestContractAddress = await txargs.deployedAddress
   console.log("Deployed Address", TestContractAddress);
 
   //--------------Interacting with the deployed simple wallet contract-------------
@@ -281,7 +294,7 @@ describe("Factory Contract", function () {
 
     //-----------------------------------------------
     const salt = 1;
-    const owner = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4";
+    const owner = "0x457160c55D80831cD903523f81114AE741710417";
     const walletname = "Simple Wallet2";
 
     const artifact = await artifacts.readArtifact("TestContract");
@@ -377,7 +390,7 @@ Here, we can see that the test passed succesfully.
 
 In addition to what we have in the pre-requisite article, the new CREATE2 method is a shorter and efficient method to using CREATE2 to deployed a contract.
 
-The link to my project repository can be found [here](https://github.com/Ultra-Tech-code/Deployment-with-create2).
+The link to my project repository can be found [here](https://github.com/idowuvictor/Deployment-using-create2-without-assembly-).
 
 ### External Link:
 

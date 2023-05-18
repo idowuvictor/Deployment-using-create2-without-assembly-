@@ -15,7 +15,7 @@ async function main() {
     //--------------Get bytecode-------------------
     const artifact = await artifacts.readArtifact("TestContract");
     const TestContractBytecode = artifact.bytecode;
-    console.log("TestContract bytecode", TestContractBytecode )
+   // console.log("TestContract bytecode", TestContractBytecode )
 
     // Create an instance of ethers.utils.AbiCoder
     const abiCoder = new ethers.utils.AbiCoder();
@@ -39,8 +39,8 @@ async function main() {
   const factoryContract = await ethers.getContractAt("Factory", factory.address);
 
   //get pre computed address of a contract
-  const getAddress = await factoryContract.getAddress(salt, bytecode);
-  console.log("Pre Computed address", getAddress);
+  const preComputeAddress = await factoryContract.preComputeAddress(salt, bytecode);
+  console.log("Pre Computed address", preComputeAddress);
 
   //-------------------------------------------------------//
 
@@ -50,7 +50,7 @@ async function main() {
   //@ts-ignore
   const txargs = txreceipt.events[0].args;
   //@ts-ignore
-  const TestContractAddress = await txargs.deployedContract
+  const TestContractAddress = await txargs.deployedAddress
   console.log("Deployed Address", TestContractAddress);
 
   //--------------Interacting with the deployed simple wallet contract-------------

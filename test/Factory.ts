@@ -49,7 +49,7 @@ describe("Factory Contract", function () {
 
 
         //get pre computed address of a contract
-        const precomputedAddress = await factoryContract.getAddress(salt, bytecode);
+        const precomputedAddress = await factoryContract.preComputeAddress(salt, bytecode);
 
         //deploy the contract
         const createContract = await factoryContract.createContract(owner, walletname, salt);
@@ -57,7 +57,7 @@ describe("Factory Contract", function () {
         //@ts-ignore
         const txargs = txreceipt.events[0].args;
         //@ts-ignore
-        const TestContractAddress = await txargs.deployedContract
+        const TestContractAddress = await txargs.deployedAddress
 
          expect(await TestContractAddress).to.equal(precomputedAddress);
     });
@@ -67,7 +67,7 @@ describe("Factory Contract", function () {
       const factoryContract = await ethers.getContractAt("Factory", factoryAddress);
 
       //get pre computed address of a contract
-      const precomputedAddress = await factoryContract.getAddress(salt, bytecode);
+      const precomputedAddress = await factoryContract.preComputeAddress(salt, bytecode);
 
       //deploy the contract
       const createContract = await factoryContract.createContract(owner, walletname, salt);
@@ -75,7 +75,7 @@ describe("Factory Contract", function () {
       //@ts-ignore
       const txargs = txreceipt.events[0].args;
       //@ts-ignore
-      const TestContractAddress = await txargs.deployedContract
+      const TestContractAddress = await txargs.deployedAddress
 
        //````````````````````````````````````````````````````````
        const TestContract = await ethers.getContractAt("TestContract", TestContractAddress);
